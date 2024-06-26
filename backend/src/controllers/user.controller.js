@@ -2,7 +2,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { 
   uploadOnCloudinary,
-  deleteImageOnCloudinary
+  deleteFromCloudinary
  } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from 'jsonwebtoken';
@@ -185,7 +185,7 @@ const updateAvatar = asyncHandler(async (req, res)=>{
 
   console.log(currentAvatarUrl[0].avatar)
   if(currentAvatarUrl[0].avatar){
-    await deleteImageOnCloudinary(currentAvatarUrl[0].avatar)
+    await deleteFromCloudinary(currentAvatarUrl[0].avatar)
   }
 
   console.log(result)
@@ -202,12 +202,12 @@ const updateAvatar = asyncHandler(async (req, res)=>{
 
 //update coverImage
 const updateCoverImage = asyncHandler(async (req, res)=>{
-  
+  TODO //change this
   if(req.files && Array.isArray(req.files.coverImage && req.files.coverImage.length>0)){
     coverImageLocalPath = req.files.coverImage[0].path
   };
 
-  const coverImageLocalPath = req.files.coverImage[0]?.path
+  const coverImageLocalPath = req.files.coverImage[0].path
   if(!coverImageLocalPath){
     throw new ApiError(400, "Avatar is required !")
   }
@@ -222,8 +222,7 @@ const updateCoverImage = asyncHandler(async (req, res)=>{
   RETURNING username, email, cover`
 
   if(currentCoverImageUrl[0].cover){
-    console.log
-    await deleteImageOnCloudinary(currentCoverImageUrl[0].cover)
+    await deleteFromCloudinary(currentCoverImageUrl[0].cover)
   }
 
   console.log(result)

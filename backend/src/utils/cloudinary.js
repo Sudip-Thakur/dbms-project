@@ -1,4 +1,5 @@
 import {v2 as cloudinary} from 'cloudinary'
+import { publicEncrypt } from 'crypto';
 import fs from 'fs'
 
 cloudinary.config({ 
@@ -30,12 +31,22 @@ const extractPublicId = (url) => {
   return publicId;
 };
 
-const deleteImageOnCloudinary = async (url) => {
+const determineResourceType = (url) => {
+  const extension = url.split('.').pop();
+  const videoExtensions = ['mp4', 'avi', 'mov', 'mkv', 'flv', 'wmv', 'webm'];
+
+  if (videoExtensions.includes(extension.toLowerCase())) {
+    return 'video';
+  }
+  return 'image';
+};
+
+const deleteFromCloudinary = async (url) => {
   const publicId = extractPublicId(url);
+  const resourceType = determineResourceType(url);
   try {
-    console.log(publicId);
-    const result = await cloudinary.uploader.destroy(publicId);
-    console.log('Image deleted:', result);
+    const result = await cloudinary.uploader.destroy(publicId, {resource_type: resourceType});
+    console.log('Deleted:', result);
     return result;
   } catch (error) {
     console.error('Error deleting image:', error);
@@ -43,4 +54,24 @@ const deleteImageOnCloudinary = async (url) => {
   }
 };
 
-export {uploadOnCloudinary, deleteImageOnCloudinary}
+const videoDuration = async (url)=>{
+  const publicId = extractPublicId(url);
+  console.log(publicId)
+  try{
+    const result = await cloudinary.api.resource(publicId, { 
+      resource_type: 'video',
+      media_metadata: true}
+    );
+    
+    return result.duration;
+  }catch(error){
+    console.error('Error when finding duration: ', error)
+    throw error
+  }
+}
+
+export {
+  uploadOnCloudinary, 
+  deleteFromCloudinary, 
+  videoDuration
+};  

@@ -89,11 +89,11 @@ const deleteVideo = asyncHandler(async(req, res)=>{
   console.log(video)
 
   if(video.length === 0){
-    new ApiError(404, "Video Not found.")
+    throw new ApiError(404, "Video Not found.")
   }
 
   if(video[0].owner !== req.user[0].id){
-    new ApiError(401, "Unauthorized Access")
+    throw new ApiError(401, "Unauthorized Access")
   }
  
 
@@ -117,8 +117,7 @@ const deleteVideo = asyncHandler(async(req, res)=>{
   )
 })
 
-
-
+const updateVideo = asyncHandler(async(req, res)=>{})
 
 export { 
   uploadVideo,

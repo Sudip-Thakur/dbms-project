@@ -93,7 +93,6 @@ const loginUser = asyncHandler(async(req, res)=>{
 
 //logout the user 
 const logoutUser = asyncHandler(async(req, res)=>{
-  console.log(req.user.id);
 
   const option = {
     httpOnly:true,
@@ -202,7 +201,6 @@ const updateAvatar = asyncHandler(async (req, res)=>{
 
 //update coverImage
 const updateCoverImage = asyncHandler(async (req, res)=>{
-  TODO //change this
   if(req.files && Array.isArray(req.files.coverImage && req.files.coverImage.length>0)){
     coverImageLocalPath = req.files.coverImage[0].path
   };
@@ -217,9 +215,9 @@ const updateCoverImage = asyncHandler(async (req, res)=>{
       throw new ApiError(400, "Avatar file is required")
   }
 
-  const currentCoverImageUrl =  await sql `select cover from users where id=${req.user[0]?.id}`
-  const result = await sql `update users set cover=${coverImage.url} where id=${req.user[0]?.id} 
-  RETURNING username, email, cover`
+  const currentCoverImageUrl =  await sql `select coverimage from users where id=${req.user[0]?.id}`
+  const result = await sql `update users set coverimage=${coverImage.url} where id=${req.user[0]?.id} 
+  RETURNING username, email, coverimage`
 
   if(currentCoverImageUrl[0].cover){
     await deleteFromCloudinary(currentCoverImageUrl[0].cover)

@@ -1,0 +1,6 @@
+CREATE TABLE subscriptions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  subscriber UUID REFERENCES users(id) ON DELETE CASCADE,
+  subscribedTo UUID REFERENCES users(id) ON DELETE CASCADE,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

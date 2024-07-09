@@ -1,0 +1,13 @@
+CREATE TABLE users (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  username VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  fullName VARCHAR(255) NOT NULL,
+  bio TEXT,
+  avatar VARCHAR(255),
+  coverImage VARCHAR(255),
+  password VARCHAR(255) NOT NULL,
+  dateOfBirth DATE,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

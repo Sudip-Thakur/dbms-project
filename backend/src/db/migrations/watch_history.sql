@@ -1,0 +1,6 @@
+CREATE TABLE watch_history (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  userId UUID REFERENCES users(id) ON DELETE CASCADE,
+  videoId UUID REFERENCES videos(id) ON DELETE CASCADE,
+  watchedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

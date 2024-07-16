@@ -31,10 +31,65 @@ const addComment = asyncHandler(async(req, res)=>{
 const getVideoComments = asyncHandler(async(req, res)=>{
   const { videoId } = req.params;
   console.log(videoId);
+  const comments = await sql `
+    select * from comments
+    where videoId = ${videoId}
+  `
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      comments,
+      "Comments fetched successfully",
+    )
+  )
+})
+
+const editComment = asyncHandler(async(req, res)=>{
+  const {content} = req.body;
+  const {commentId} = req.params;
+  const userId = req.user[0].id;
+  const comment = await sql `
+    UPDATE comments
+    SET content = ${content}
+    WHERE id = ${commentId} and userId=${userId}
+    RETURNING userId, videoId, content 
+  `
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      comment,
+      "Comment edited successfully"
+    )
+  )
+})
+
+const deleteComment = asyncHandler(async(req, res)=>{
+  const {commentId} = req.params;
+  const userId = req.user[0].id;
+  const comment = await sql `
+    DELETE FROM comments
+    WHERE id = ${commentId} and userId=${userId}
+    RETURNING userId, videoId, content
+  `
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      comment,
+      "Comment deleted successfully"
+    )
+  )
 })
 
 
 export {
   addComment,
-  getVideoComments
+  getVideoComments,
+  editComment,
+  deleteComment
 }

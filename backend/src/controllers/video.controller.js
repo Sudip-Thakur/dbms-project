@@ -145,8 +145,8 @@ const updateVideo = asyncHandler(async(req, res)=>{
     if(thumbnail){
       if(video[0].thumbnail){
         await deleteFromCloudinary(video[0].thumbnail)
-        await sql `update videos set thumbnail=${thumbnail.url} where id=${videoId}`
       }
+      await sql `update videos set thumbnail=${thumbnail.url} where id=${videoId}`
     }
     console.log("Thumbnail Updated")
   }
@@ -212,6 +212,16 @@ const getRandomVideo = asyncHandler(async(req, res)=>{
   )
 })
 
+//recommendation
+const getRecommendation = asyncHandler(async(req, res)=>{
+  const userId = req.user[0].id
+  console.log(userId)
+  console.log("hekki")
+  const videos = await sql `
+  select * from get_recommendation(${userId})`
+
+  console.log(videos)
+})
 
 export { 
   uploadVideo,
@@ -219,5 +229,6 @@ export {
   deleteVideo,
   updateVideo,
   togglePublishStatus,
-  getRandomVideo
+  getRandomVideo,
+  getRecommendation
 }

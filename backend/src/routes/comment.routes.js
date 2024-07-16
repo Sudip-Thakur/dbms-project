@@ -3,7 +3,9 @@ import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 import { 
   getVideoComments,
-  addComment
+  addComment,
+  editComment,
+  deleteComment
 } from "../controllers/comment.controller.js";
 
 import { 
@@ -21,8 +23,10 @@ router
   .get(validateSchema(videoIdSchema),getVideoComments)
   .post(validateSchema(videoIdSchema), validateSchema(contentSchema), addComment)
 router
-  .route("/comment")
-  .patch()
-  .delete()
+  .route("/edit")
+  .patch(validateSchema(commentIdSchema), editComment)
+router
+.route("/delete")
+.delete(validateSchema(commentIdSchema), deleteComment)
 
 export default router;

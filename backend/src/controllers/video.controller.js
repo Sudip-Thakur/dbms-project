@@ -211,18 +211,58 @@ const getRandomVideo = asyncHandler(async(req, res)=>{
       )
   )
 })
-
 //recommendation
-const getRecommendation = asyncHandler(async(req, res)=>{
-  const userId = req.user[0].id
-  console.log(userId)
-  console.log("hekki")
+const searchVideo = asyncHandler(async(req, res)=>{
+  const searchKeyword = req.params.searchKeyword
+  console.log(searchKeyword)
   const videos = await sql `
-  select * from get_recommendation(${userId})`
-
-  console.log(videos)
+  select id ,title, description from videos 
+  where "id" in(select search_results(${searchKeyword}, 10));
+  `
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      videos,
+      "Searched Results"
+    )
+  )
 })
 
+const getSubscribedRecommendation = asyncHandler(async(req, res)=>{
+  const userId = req.user[0].id
+  const videos = await sql `
+  select "id" ,"title", "description" from videos 
+  where "id" in(select subscribed_recommendation(${userId}, 10))`;
+
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      videos,
+      "Recommended Videos"
+    )
+  )
+})
+
+const getRecommendation = asyncHandler(async(req, res)=>{
+  const userId = req.user[0].id
+  const videos = await sql `
+  select "id" ,"title", "description" from videos 
+  where "id" in(select get_recommendation(${userId}))`;
+
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      videos,
+      "Recommended Videos according to recent activity."
+    )
+  )
+})
 export { 
   uploadVideo,
   getVideo,
@@ -230,5 +270,7 @@ export {
   updateVideo,
   togglePublishStatus,
   getRandomVideo,
-  getRecommendation
+  getRecommendation,
+  getSubscribedRecommendation,
+  searchVideo
 }

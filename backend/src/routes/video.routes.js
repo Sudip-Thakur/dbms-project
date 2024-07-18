@@ -13,6 +13,8 @@ import {
   togglePublishStatus,
   getRandomVideo,
   getRecommendation,
+  getSubscribedRecommendation,
+  searchVideo
 } from "../controllers/video.controller.js";
 
 const router = Router();
@@ -55,6 +57,11 @@ router
 
 router.route("/random/video").get(getRandomVideo);
 
-router.route("/recommend/video").get(verifyJWT,getRecommendation);
+router.route("/recommend/recent").get(verifyJWT,getRecommendation);
+
+router.route("/recommend/subscribed").get(verifyJWT,getSubscribedRecommendation);
+
+router.route("/search/:searchKeyword").get(searchVideo);
+
 
 export default router;

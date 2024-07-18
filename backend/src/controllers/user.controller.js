@@ -81,8 +81,12 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
-    secure: true,
+    secure: false,
+    sameSite: "lax",
+    maxAge: 1000 * 60 * 60 * 24 * 30,
+    path :'/'
   };
+  console.log("Logged in success")
 
   return res
     .status(200)
@@ -136,8 +140,11 @@ const changePassword = asyncHandler(async (req, res) => {
 });
 
 //get current user
-const currentUser = asyncHandler((req, res) => {
-  return res.status(200).json(new ApiResponse(200, req.user, "Current User"));
+const currentUser = asyncHandler(async(req, res) => {
+  //read avatar, username
+  const user = await sql`select avatar, username, email from users where id=${req.user[0]?.id
+    }`;
+  return res.status(200).json(new ApiResponse(200, user[0], "Current User"));
 });
 
 //update the full name

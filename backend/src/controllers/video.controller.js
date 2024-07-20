@@ -197,10 +197,10 @@ const togglePublishStatus = asyncHandler(async (req, res)=>{
 
 const getRandomVideo = asyncHandler(async(req, res)=>{
   const videos = await sql `
-    select * from videos 
-    where isPublished=true 
-    order by random() 
-    limit 10`
+  SELECT videos.id,videos.owner, videos.thumbnail, videos.title, videos.views, users.fullName, users.avatar, videos.views, videos.createdAt
+  FROM videos 
+  JOIN users ON videos.owner = users.id
+  limit 24`
   return res
   .status(200)
   .json(
@@ -216,8 +216,11 @@ const searchVideo = asyncHandler(async(req, res)=>{
   const searchKeyword = req.params.searchKeyword
   console.log(searchKeyword)
   const videos = await sql `
-  select id ,title, description from videos 
-  where "id" in(select search_results(${searchKeyword}, 10));
+  SELECT videos.id,videos.owner, videos.thumbnail, videos.title, videos.views, users.fullName, users.avatar, videos.views, videos.createdAt
+  FROM videos 
+  JOIN users ON videos.owner = users.id
+  WHERE videos.id IN (SELECT search_results(${searchKeyword},24));
+
   `
   return res
   .status(200)
@@ -250,9 +253,11 @@ const getSubscribedRecommendation = asyncHandler(async(req, res)=>{
 const getRecommendation = asyncHandler(async(req, res)=>{
   const userId = req.user[0].id
   const videos = await sql `
-  select "id" ,"title", "description" from videos 
-  where "id" in(select get_recommendation(${userId}))`;
-
+SELECT videos.thumbnail, videos.title, videos.views, users.username, users.avatar 
+FROM videos 
+JOIN users ON videos.owner = users.id
+WHERE videos.id IN (SELECT get_recommendation(${userId}));`;
+  console.log(videos)
   return res
   .status(200)
   .json(
@@ -263,6 +268,25 @@ const getRecommendation = asyncHandler(async(req, res)=>{
     )
   )
 })
+
+//get all video of a particular channel
+const getChannelVideos = asyncHandler(async(req, res)=>{
+  const {channelId} = req.params
+  const videos = await sql `
+  SELECT videos.id,videos.owner, videos.thumbnail, videos.title, videos.views, users.fullName, users.avatar, videos.views, videos.createdAt from
+  videos
+  JOIN users ON videos.owner = users.id
+  WHERE videos.owner = ${channelId};`;
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      videos,
+      "Videos of a particular channel"
+    ));
+  }
+)
 export { 
   uploadVideo,
   getVideo,
@@ -272,5 +296,6 @@ export {
   getRandomVideo,
   getRecommendation,
   getSubscribedRecommendation,
-  searchVideo
+  searchVideo,
+  getChannelVideos
 }

@@ -107,17 +107,24 @@ const loginUser = asyncHandler(async (req, res) => {
 
 //logout the user
 const logoutUser = asyncHandler(async (req, res) => {
-  const option = {
+  // Use the same options as when setting the cookies
+  const options = {
     httpOnly: true,
-    secure: true,
+    secure: false, // Match this with how cookies were set (true if using HTTPS)
+    sameSite: "lax",
+    path: '/',
+    maxAge: 0 // Set maxAge to 0 to effectively delete the cookies
   };
+
+  console.log("User Logged Out");
 
   return res
     .status(200)
-    .cookie("refreshToken", "", option)
-    .cookie("accessToken", "", option)
+    .cookie("accessToken", "", options)
+    .cookie("refreshToken", "", options)
     .json(new ApiResponse(200, {}, "User Logged Out"));
 });
+
 
 //change the password of the current password
 const changePassword = asyncHandler(async (req, res) => {
@@ -240,6 +247,35 @@ const updateBio = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, user[0], "Bio update successfully"));
 });
 
+//get user by their id passed in params
+const getUserById = asyncHandler(async (req, res) => {
+  console.log("userid :",req.user[0].id)
+  let user = await sql`select coverimage, avatar, fullname , bio from users
+  where id=${req.params.channelId}
+  `
+  //check if the current user has subscribed to given channel  or not
+  const checkSubscribed = await sql`select * from subscriptions 
+  where subscriber=${req.user[0].id}
+  and subscribedto=${req.params.channelId}
+  `
+  if(checkSubscribed.length===0){
+    user[0].isSubscribed=false
+  }
+  else{
+    user[0].isSubscribed=true
+  }
+  //count the subscriber
+  const countSubscribers = await sql`select count(*) as count from subscriptions
+  where subscribedto=${req.params.channelId}
+  `
+  user[0].countSubscribers=countSubscribers[0].count
+  console.log(user)
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(200, user, "User fetched successfully")
+  )
+})
 export {
   registerUser,
   loginUser,
@@ -250,4 +286,5 @@ export {
   updateAvatar,
   updateCoverImage,
   updateBio,
+  getUserById
 };

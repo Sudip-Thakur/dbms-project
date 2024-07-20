@@ -8,6 +8,7 @@ import {
   changePasswordSchema,
   updateFullnameSchema,
   bioSchema,
+  channelIdSchema
 } from "../schemas/user.schema.js";
 
 import {
@@ -20,11 +21,14 @@ import {
   updateAvatar,
   updateCoverImage,
   updateBio,
+  getUserById
 } from "../controllers/user.controller.js";
 
 const router = Router();
 
 router.route("/register").post(validateSchema(registerSchema), registerUser);
+
+router.route("/get/:channelId").get(verifyJWT,validateSchema(channelIdSchema), getUserById)
 
 router.route("/login").post(validateSchema(loginSchema), loginUser);
 

@@ -5,8 +5,6 @@ import sql from "../db/db.js";
 
 export const verifyJWT = asyncHandler(async(req, _, next) => {
     try {
-        console.log(req.cookies);
-        console.log("1")
         const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "")
 
         if (!token) {
@@ -14,7 +12,6 @@ export const verifyJWT = asyncHandler(async(req, _, next) => {
         }
     
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
-        console.log(decodedToken);
         const user = await sql `SELECT id, username, email, fullName FROM users WHERE users.id = ${decodedToken?.id}`
     
         if (!user) {

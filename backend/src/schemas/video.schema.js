@@ -19,8 +19,15 @@ const videoIdSchema = z.object({
     })
   })
 });
-
+const channelIdSchema = z.object({
+  params: z.object({
+    channelId: z.string().uuid({
+      message: "Invalid UUID"
+    })
+  })
+});
 export {
   uploadSchema,
-  videoIdSchema
+  videoIdSchema,
+  channelIdSchema
 }

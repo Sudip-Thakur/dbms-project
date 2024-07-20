@@ -46,10 +46,15 @@ const toggleVideoLike = asyncHandler( async(req, res)=>{
 })
 
 const getLikedVideo = asyncHandler( async(req, res)=>{
-  const currentUser = req.user[0];
+  const userId = req.user[0].id;
+  console.log(userId)
   const likedVideos = await sql `
-    select likes.videoId from likes
-    where userId=${currentUser.id}
+SELECT videos.id,videos.owner, videos.thumbnail, videos.title, videos.views, users.fullName, users.avatar, videos.views, videos.createdAt from likes 
+join videos
+    on likes.videoId = videos.id
+    join users
+    on videos.owner=users.id
+    where likes.userId=${userId}
   `
   return res
   .status(200)

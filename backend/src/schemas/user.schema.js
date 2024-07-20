@@ -60,11 +60,18 @@ const bioSchema = z.object({
   })
 })
 
-
+const channelIdSchema = z.object({
+  params: z.object({
+    channelId: z.string().uuid({
+      message: "Invalid UUID"
+    })
+  })
+});
 
 export { registerSchema,
   loginSchema,
   changePasswordSchema,
   updateFullnameSchema,
-  bioSchema
+  bioSchema,
+  channelIdSchema
 };

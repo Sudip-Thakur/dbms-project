@@ -14,11 +14,10 @@ import {
 
 const router = Router()
 
-router.use(verifyJWT)
 
 router
   .route("/channel/:channelId")
-  .post(validateSchema(channelIdSchema),toggleSubscription)
+  .post(verifyJWT,validateSchema(channelIdSchema),toggleSubscription)
 
-router.route("/channels").get(getSubscribedChannel)
+router.route("/channels").get(verifyJWT,getSubscribedChannel)
 export default router;

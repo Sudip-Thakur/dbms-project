@@ -3,7 +3,7 @@ import { upload } from "../middlewares/multer.middleware.js";
 import validateSchema from "../middlewares/schemaValidator.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
-import { videoIdSchema, uploadSchema } from "../schemas/video.schema.js";
+import { videoIdSchema, uploadSchema, channelIdSchema } from "../schemas/video.schema.js";
 
 import {
   uploadVideo,
@@ -14,7 +14,8 @@ import {
   getRandomVideo,
   getRecommendation,
   getSubscribedRecommendation,
-  searchVideo
+  searchVideo,
+  getChannelVideos
 } from "../controllers/video.controller.js";
 
 const router = Router();
@@ -51,6 +52,7 @@ router
     updateVideo
   );
 
+router.route("/channel/:channelId").get(validateSchema(channelIdSchema),getChannelVideos)
 router
   .route("/toggle/publish/:videoId")
   .patch(verifyJWT, validateSchema(videoIdSchema), togglePublishStatus);

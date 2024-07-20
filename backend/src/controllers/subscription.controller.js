@@ -4,8 +4,10 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import sql from "../db/db.js";
 
 const toggleSubscription = asyncHandler(async (req, res)=>{
+  console.log("called subs")
   const {channelId} = req.params;
   console.log(channelId);
+  console.log(req.user[0].id)
   const currentUser = req.user[0]
   const existingSubscription = await sql `select * from subscriptions where subscriber=${currentUser.id} and subscribedTo=${channelId}`
   
@@ -41,24 +43,43 @@ const toggleSubscription = asyncHandler(async (req, res)=>{
 
 })
 
-const getSubscribedChannel = asyncHandler(async(req, res)=>{
-  const currentUser = req.user[0]
-  const subscribedChannel = await sql `
-    select u.fullName from users u
-    JOIN subscriptions s
-    ON u.id =s.subscribedTo
-    where s.subscriber=${currentUser.id}
-    `
+const getSubscribedChannel = asyncHandler(async (req, res) => {
+  console.log("called")
+  const currentUser = req.user[0].id;
+  
+  let subscribedChannel = await sql`
+    SELECT 
+      u.id AS channelId,
+      u.fullname,
+      u.avatar,
+      u.bio,
+      COUNT(DISTINCT s2.subscriber) AS subscriberCount,
+      COUNT(DISTINCT v.id) AS videoCount
+    FROM subscriptions s1
+    JOIN users u ON s1.subscribedTo = u.id
+    LEFT JOIN subscriptions s2 ON u.id = s2.subscribedTo
+    LEFT JOIN videos v ON u.id = v.owner AND v.isPublished = TRUE
+    WHERE s1.subscriber = ${currentUser}
+    GROUP BY u.id, u.fullname, u.avatar, u.bio;
+  `;
+  //add issubscribed = true in each
+  subscribedChannel = subscribedChannel.map((channel) => {
+    channel.issubscribed = true;
+    return channel;
+  });
+
   return res
-  .status(200)
-  .json(
-    new ApiResponse(
-      200,
-      subscribedChannel,
-      "Subscribed Channel"
-    )
-  )
-})
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        subscribedChannel,
+        "Subscribed Channel"
+      )
+    );
+});
+
+
 
 export{
   toggleSubscription,

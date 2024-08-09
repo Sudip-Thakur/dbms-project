@@ -2,6 +2,7 @@ import { Router } from "express";
 import { upload } from "../middlewares/multer.middleware.js";
 import validateSchema from "../middlewares/schemaValidator.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { setUser } from "../middlewares/setUser.middleware.js";
 
 import { videoIdSchema, uploadSchema, channelIdSchema } from "../schemas/video.schema.js";
 
@@ -38,7 +39,7 @@ router.route("/upload-video").post(
 
 router
   .route("/:videoId")
-  .get(validateSchema(videoIdSchema), getVideo)
+  .get(setUser,validateSchema(videoIdSchema), getVideo)
   .delete(verifyJWT, validateSchema(videoIdSchema), deleteVideo)
   .patch(
     verifyJWT,

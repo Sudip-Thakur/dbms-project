@@ -55,32 +55,103 @@ const uploadVideo = asyncHandler(async(req, res)=>{
     )
   )
 });
+const getVideo = asyncHandler(async (req, res) => {
+  const { videoId } = req.params;
+  const userId = req.user?.[0]?.id || null; // Ensure userId is null if not authenticated
 
-const getVideo = asyncHandler(async (req,res)=>{
-  const { videoId } = req.params
-  console.log(videoId);
-  const video = await sql `select v.videoLink, v.thumbnail, v.title, v.description, v.duration, v.views,
-   (select u.fullname from users u
-   where u.id =v.owner) as channel 
-   from videos v
-   where v.id = ${videoId}`
+  // Query to get video details
+  const videoDetails = await sql`
+      SELECT 
+          v.title AS title,
+          v.views AS view_count,
+          v.createdAt AS time,
+          u.fullName AS channel_name,
+          u.id AS channel_id,
+          u.avatar AS avatar
+      FROM videos v
+      JOIN users u ON u.id = v.owner
+      WHERE v.id = ${videoId}
+  `;
 
-   if(video.length === 0){
-    throw new ApiError(404, "Video Not found")
-   }
+  if (videoDetails.length === 0) {
+      throw new ApiError(404, "Video Not Found");
+  }
 
-   console.log(video);
+  // Query to get subscription count
+  const subCountResult = await sql`
+      SELECT COUNT(*) AS sub_count
+      FROM subscriptions s
+      WHERE s.subscribedTo = ${videoDetails[0].channel_id}
+  `;
 
-  return res
-  .status(200)
-  .json(
-    new ApiResponse(
-      200,
-      video[0],
-      "Video fetched successfully"
-    )
-  )
-})
+  // Query to get like count
+  const likeCountResult = await sql`
+      SELECT COUNT(*) AS like_count
+      FROM likes l
+      WHERE l.videoId = ${videoId}
+  `;
+
+  // Query to check if the user is subscribed
+  const isSubscribed = userId
+      ? await sql`
+          SELECT EXISTS (
+              SELECT 1
+              FROM subscriptions s
+              WHERE s.subscriber = ${userId} AND s.subscribedTo = ${videoDetails[0].channel_id}
+          ) AS subscribed
+      `
+      : [{ subscribed: false }];
+
+  // Query to check if the user liked the video
+  const isLiked = userId
+      ? await sql`
+          SELECT EXISTS (
+              SELECT 1
+              FROM likes l
+              WHERE l.userId = ${userId} AND l.videoId = ${videoId}
+          ) AS liked
+      `
+      : [{ liked: false }];
+
+  // Query to get comments
+  const comments = await sql`
+      SELECT 
+          c.content,
+          c.createdAt AS time,
+          u.username,
+          u.avatar
+      FROM comments c
+      JOIN users u ON u.id = c.userId
+      WHERE c.videoId = ${videoId}
+      ORDER BY c.createdAt DESC
+  `;
+
+  const video = {
+      ...videoDetails[0],
+      sub_count: parseInt(subCountResult[0].sub_count, 10),
+      like_count: parseInt(likeCountResult[0].like_count, 10),
+      subscribed: isSubscribed[0].subscribed,
+      liked: isLiked[0].liked,
+      comments: comments.map(comment => ({
+          content: comment.content,
+          time: comment.time,
+          username: comment.username,
+          avatar: comment.avatar
+      }))
+  };
+
+  return res.status(200).json(
+      new ApiResponse(
+          200,
+          video,
+          "Video fetched successfully"
+      )
+  );
+});
+
+
+
+
 
 const deleteVideo = asyncHandler(async(req, res)=>{
   const { videoId } = req.params

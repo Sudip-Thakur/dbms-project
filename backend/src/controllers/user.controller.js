@@ -148,6 +148,7 @@ const changePassword = asyncHandler(async (req, res) => {
 
 //get current user
 const currentUser = asyncHandler(async(req, res) => {
+  console.log("Current User")
   //read avatar, username
   const user = await sql`select avatar, username, email from users where id=${req.user[0]?.id
     }`;

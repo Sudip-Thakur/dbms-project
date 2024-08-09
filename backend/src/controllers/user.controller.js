@@ -110,8 +110,8 @@ const logoutUser = asyncHandler(async (req, res) => {
   // Use the same options as when setting the cookies
   const options = {
     httpOnly: true,
-    secure: false, // Match this with how cookies were set (true if using HTTPS)
-    sameSite: "lax",
+    secure: true, // Match this with how cookies were set (true if using HTTPS)
+    sameSite: "None",
     path: '/',
     maxAge: 0 // Set maxAge to 0 to effectively delete the cookies
   };

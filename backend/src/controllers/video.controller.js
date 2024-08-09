@@ -62,6 +62,7 @@ const getVideo = asyncHandler(async (req, res) => {
   // Query to get video details
   const videoDetails = await sql`
       SELECT 
+          v.videoLink AS videoLink
           v.title AS title,
           v.views AS view_count,
           v.createdAt AS time,

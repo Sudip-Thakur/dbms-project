@@ -55,6 +55,7 @@ const uploadVideo = asyncHandler(async(req, res)=>{
     )
   )
 });
+//TODO videolink adding 
 const getVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
   const userId = req.user?.[0]?.id || null; // Ensure userId is null if not authenticated

@@ -25,7 +25,7 @@ Welcome to VideoHub, a platform where users can upload, share, and discover vide
 - [x] Optimize database queries
 
 
-### Pending Tasks:
+### Further Improvements:
 - [ ] Implement video recommendations in more enhanced way
 - [ ] Enhance security features
 - [ ] Improve error handling and logging
@@ -44,7 +44,7 @@ Welcome to VideoHub, a platform where users can upload, share, and discover vide
 - [x] Create page for individual channels
 
 
-### Pending Tasks:
+### Further Improvements:
 - [ ] Create page for playlists
 - [ ] Improve responsive design
 - [ ] Add loading indicators and error messages

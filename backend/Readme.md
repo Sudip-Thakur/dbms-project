@@ -1,6 +1,6 @@
 # VideoHub: A Video Sharing App
 
-Welcome to VideoHub, a platform where users can upload, share, and discover videos. This README provides an overview of the technologies used in the project, along with detailed descriptions of the backend and frontend components, and instructions on how to run the project.
+Welcome to VideoHub, a platform where users can upload, share, and discover videos. This README provides an overview of the technologies used in the project, details about the backend and frontend components, and instructions on how to run the project.
 
 ## Tech Used
 
@@ -15,17 +15,18 @@ Welcome to VideoHub, a platform where users can upload, share, and discover vide
 ## Backend
 
 ### Completed Tasks:
-- [x] Create and update user
-- [x] Create, update, upload, and delete video
-- [x] Create, edit, and delete comment
+- [x] Create and update user profiles
+- [x] Create, update, upload, and delete videos
+- [x] Create, edit, and delete comments
 - [x] Like, unlike, and list all liked videos
-- [x] Create playlist, add video to playlist, and edit playlist
-- [x] Subscription management similar to YouTube
-- [x] Watch history management
+- [x] Create playlists, add videos to playlists, and edit playlists
+- [x] Manage subscriptions similar to YouTube
+- [x] Track and delete watch history
+- [x] Optimize database queries
+
 
 ### Pending Tasks:
-- [ ] Optimize database queries
-- [ ] Implement video recommendations
+- [ ] Implement video recommendations in more enhanced way
 - [ ] Enhance security features
 - [ ] Improve error handling and logging
 
@@ -40,36 +41,56 @@ Welcome to VideoHub, a platform where users can upload, share, and discover vide
 - [x] Signup page
 - [x] Video upload form
 - [x] Search page
+- [x] Create page for individual channels
+
 
 ### Pending Tasks:
 - [ ] Create page for playlists
-- [ ] Create page for individual channels
 - [ ] Improve responsive design
 - [ ] Add loading indicators and error messages
-- [ ] Enhance video player features
 
 ## How to Run the Project
 
 ### Frontend
 
-1. Install dependencies:
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/Sudip-Thakur/videoHub.git
+    ```
+
+2. Navigate to the project directory:
+    ```bash
+    cd videoHub
+    ```
+
+3. Install dependencies:
     ```bash
     npm install
     ```
 
-2. Start the development server:
+4. Start the development server:
     ```bash
     npm run dev
     ```
 
 ### Backend
 
-1. Install dependencies:
+1. Clone the repository (replace with your backend repo link):
+    ```bash
+    git clone https://github.com/Sudip-Thakur/dbms-project.git
+    ```
+
+2. Navigate to the project directory:
+    ```bash
+    cd backend
+    ```
+
+3. Install dependencies:
     ```bash
     npm install
     ```
 
-2. Start the development server:
+4. Start the development server:
     ```bash
     npm run dev
     ```
@@ -77,5 +98,34 @@ Welcome to VideoHub, a platform where users can upload, share, and discover vide
 ### Note
 
 - Ensure CORS settings in the backend are properly configured.
-- Check and set the base URL in the frontend.
+- Check and set the base URL in the frontend to point to your backend server.
 - Ensure all necessary environment variables are set.
+
+## Environment Variables
+
+- **Backend:**
+  - `PORT` - Port number the server will run on (e.g., `8000`)
+  - `ACCESS_TOKEN_SECRET` - Secret key for JWT access tokens
+  - `ACCESS_TOKEN_EXPIRY` - Expiry time for access tokens
+  - `REFRESH_TOKEN_SECRET` - Secret key for JWT refresh tokens
+  - `REFRESH_TOKEN_EXPIRY` - Expiry time for refresh tokens
+  - `CLOUDINARY_CLOUD_NAME` - Cloud name for Cloudinary
+  - `CLOUDINARY_API_KEY` - API key for Cloudinary
+  - `CLOUDINARY_API_SECRET` - API secret for Cloudinary
+  - `DB_URL` - PostgreSQL database URL
+
+- **Frontend:**
+  - `REACT_APP_API_URL` - Base URL for the backend API
+  - `REACT_APP_CLOUDINARY_URL` - Cloudinary API URL
+
+## Additional Information
+
+- Make sure to regularly check and update your dependencies to avoid security vulnerabilities.
+- Consider setting up automated tests for both frontend and backend to ensure the stability of the application.
+
+We hope you enjoy using VideoHub. Feel free to contribute to the project or report any issues you encounter.
+
+## Links
+
+- **Frontend Repository:** [VideoHub Frontend](https://github.com/Sudip-Thakur/videoHub)
+- **Live Site:** [VideoHub](https://video-hub-beta-ecru.vercel.app)

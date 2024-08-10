@@ -55,6 +55,7 @@ join videos
     join users
     on videos.owner=users.id
     where likes.userId=${userId}
+    order by likes.createdAt DESC
   `
   return res
   .status(200)

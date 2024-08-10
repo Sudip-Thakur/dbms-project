@@ -55,7 +55,7 @@ const uploadVideo = asyncHandler(async(req, res)=>{
     )
   )
 });
-//TODO videolink adding 
+//TODO videolink adding
 const getVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
   const userId = req.user?.[0]?.id || null; // Ensure userId is null if not authenticated
@@ -63,6 +63,9 @@ const getVideo = asyncHandler(async (req, res) => {
   // Query to get video details
   const videoDetails = await sql`
       SELECT 
+          v.videoLink AS video,
+          v.thumbnail AS thumbnail,
+          v.description AS description,
           v.title AS title,
           v.views AS view_count,
           v.createdAt AS time,

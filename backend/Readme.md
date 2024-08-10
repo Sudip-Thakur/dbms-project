@@ -58,17 +58,12 @@ Welcome to VideoHub, a platform where users can upload, share, and discover vide
     git clone https://github.com/Sudip-Thakur/videoHub.git
     ```
 
-2. Navigate to the project directory:
-    ```bash
-    cd videoHub
-    ```
-
-3. Install dependencies:
+2. Install dependencies:
     ```bash
     npm install
     ```
 
-4. Start the development server:
+3. Start the development server:
     ```bash
     npm run dev
     ```
@@ -114,16 +109,12 @@ Welcome to VideoHub, a platform where users can upload, share, and discover vide
   - `CLOUDINARY_API_SECRET` - API secret for Cloudinary
   - `DB_URL` - PostgreSQL database URL
 
-- **Frontend:**
-  - `REACT_APP_API_URL` - Base URL for the backend API
-  - `REACT_APP_CLOUDINARY_URL` - Cloudinary API URL
 
 ## Additional Information
 
 - Make sure to regularly check and update your dependencies to avoid security vulnerabilities.
 - Consider setting up automated tests for both frontend and backend to ensure the stability of the application.
 
-We hope you enjoy using VideoHub. Feel free to contribute to the project or report any issues you encounter.
 
 ## Links
 
